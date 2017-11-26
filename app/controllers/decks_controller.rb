@@ -26,7 +26,8 @@ class DecksController < ProtectedController
 
   # PATCH/PUT /decks/1
   def update
-    if @deck.update(deck_params)
+    params[:deck][:cards] = [] unless params[:deck].key?(:cards)
+    if @deck.update(deck_update_params)
       render json: @deck
     else
       render json: @deck.errors, status: :unprocessable_entity
@@ -44,8 +45,12 @@ class DecksController < ProtectedController
       @deck = current_user.decks.find(params[:id])
     end
 
+    def deck_update_params
+      params.require(:deck).permit(:name, :cards, cards: [])
+    end
+
     # Only allow a trusted parameter "white list" through.
     def deck_params
-      params.require(:deck).permit(:user_id, :name, :cards)
+      params.require(:deck).permit(:user_id, :name, cards: [])
     end
 end

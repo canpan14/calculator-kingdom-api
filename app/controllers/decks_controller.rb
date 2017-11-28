@@ -26,7 +26,6 @@ class DecksController < ProtectedController
 
   # PATCH/PUT /decks/1
   def update
-    params[:deck][:cards] = [] unless params[:deck].key?(:cards)
     if @deck.update(deck_update_params)
       render json: @deck
     else
@@ -46,11 +45,11 @@ class DecksController < ProtectedController
     end
 
     def deck_update_params
-      params.require(:deck).permit(:name, :cards, cards: [])
+      params.require(:deck).permit(:name)
     end
 
     # Only allow a trusted parameter "white list" through.
     def deck_params
-      params.require(:deck).permit(:user_id, :name, cards: [])
+      params.require(:deck).permit(:user_id, :name)
     end
 end
